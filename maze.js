@@ -1,34 +1,63 @@
-function escapeMaze(maze, moves = ''){
-    let y = 0;
-    let x = 0;
+function escapeMaze(maze, moves = '', y = 0, x = 0, direction = 'D') {
     let n = maze.length;
     let m = maze[0].length;
 
     // base case
-    if (maze[y][x] === 'e'){
+    if (maze[y][x] === 'e') {
         return moves;
     }
 
+    // check if space is open or exit
+
+    const isOpen = (y, x) => maze[y][x] === ' ' || maze[y][x] === 'e'
+
     // recursive case
-    if (y+1 < n) {
-        if (maze[y+1][x] === ' '
-        || maze[y+1][x] === 'e') {
-            // we can move down
+    if (direction === 'D') {
+        if (y + 1 < n && isOpen(y + 1, x)) {
+            y++;
+            moves += direction;
+        } else {
+            direction = 'R';
         }
-    } else if(x+1 < m) {
-        if (maze[y][x+1] === ' '
-      || maze[y][x+1] === 'e'){
-        // we can move right
+    } else if (direction === 'R') {
+        if (x + 1 < m && isOpen(y, x + 1)) {
+            x++;
+            moves += direction;
+        } else {
+            direction = 'U';
         }
-    } else if(y-1 >= 0) {
-        if (maze[y-1][x] === ' '
-      || maze[y-1][x] === 'e'){
-        // we can move up
+    } else if (direction === 'U') {
+        if (y - 1 >= 0 && isOpen(y - 1, x)) {
+            y--;
+            moves += direction;
+        } else {
+            direction = 'U'
         }
     } else {
-        if (maze[y][x-1] === ' '
-      || maze[y][x-1] === 'e'){
-        // we can move left
+        if (x - 1 >= 0 && isOpen(y, x - 1)) {
+            x--;
+            moves += direction;
+        } else {
+            direction = 'L'
         }
     }
+
+    return escapeMaze(maze, moves, y, x, direction)
 }
+
+let mySmallMaze = [
+    [' ', ' ', ' '],
+    [' ', '*', ' '],
+    [' ', ' ', 'e']
+];
+
+let maze = [
+    [' ', ' ', ' ', '*', ' ', ' ', ' '],
+    ['*', '*', ' ', '*', ' ', '*', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', '*', '*', '*', '*', '*', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', 'e']
+];
+
+console.log(escapeMaze(mySmallMaze));
+// console.log(escapeMaze(maze));
